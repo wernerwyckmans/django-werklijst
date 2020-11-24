@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+{% extends "core/base.html" %}
+
+    {% block body_block %}
+        <div class="container inhoud">
+            {% for control in control_data %}
+                {{ control }}
+                <br>
+            {% endfor %}
+        </div>
+    {% endblock %}

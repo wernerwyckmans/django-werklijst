@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <style>
+        .inhoud {
+         border: 2px solid black;
+         border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+            <ul class="nav navbar-nav">
+                <li><a href="{% url 'core:stafform' %}" class="navbar-link">Staf</a></li>
+                <li><a href="{% url 'admin:index' %}" class="navbar-link">Admin</a></li>
+                <li><a href="{% url 'core:assistentenform' %}" class="navbar-link">Assitenten</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        {% block body_block %}
+
+        {% endblock %}
+    </div>
+</body>
+</html>

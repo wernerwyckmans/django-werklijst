@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+{% extends "core/base.html" %}
+
+    {% block body_block %}
+    <div class="container ">
+        <h2>Maak uw keuzes voor de controle van de lijst van de stafleden</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.as_p }}
+            {% csrf_token %}
+            <input type="submit" class="btn btn-primary" value="Upload">
+        </form>
+    </div>
+    <hr>
+    {% endblock %}
