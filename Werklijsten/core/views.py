@@ -25,7 +25,9 @@ def staf_view(request):
 
             control_data = controlestaf.main(wb, weekkeuze)
 
-            return render(request, 'core/resultpage.html', {'control_data': control_data})
+            context = {'control_data': control_data, 'weekkeuze': weekkeuze}
+
+            return render(request, 'core/resultpage.html', context)
 
     else:
 
@@ -46,7 +48,9 @@ def assistenten_view(request):
 
             control_data = controleassist.main(wb, weekkeuze)
 
-            return render(request, 'core/resultpage.html', {'control_data': control_data})
+            context = {'control_data': control_data, 'weekkeuze': weekkeuze}
+
+            return render(request, 'core/resultpage.html', context)
 
     else:
 

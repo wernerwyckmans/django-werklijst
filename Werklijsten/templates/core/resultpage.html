@@ -2,10 +2,16 @@
 {% extends "core/base.html" %}
 
     {% block body_block %}
+
         <div class="container inhoud">
-            {% for control in control_data %}
-                {{ control }}
-                <br>
-            {% endfor %}
+
+            <h2> {{ weekkeuze }}</h2>
+
+            <ul class="list-group">
+                {% for control in control_data %}
+                    <li class="list-group-item">{{control }}</li>
+                {% endfor %}
+            </ul>
+
         </div>
     {% endblock %}

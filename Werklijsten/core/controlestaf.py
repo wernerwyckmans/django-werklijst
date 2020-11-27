@@ -24,6 +24,7 @@ def main(wb, weekkeuze):
     control_data += checkdaywithoutfunction(dagschemas)
     control_data += checkwachten(weken, li)
     control_data += checkrecup(dagschemas)
+    control_data += check_v3(dagschemas)
 
     return control_data
 
@@ -258,6 +259,20 @@ def checkrecup(schemas):
         result.append('Recuperaties in orde')
     return result
 
+
+def check_v3(schemas):
+    # heeft een staflid dag na V3 een V16, snipperdag of onverwachte snipperdag
+    result = list()
+    for i in range(0, len(schemas)):
+        if "V3 (THUISWACHT)" in schemas[i]:
+
+            # op zaterdag en zondag zijn V16, snipperdag of onverwachte snipperdag niet mogelijk
+            if not (schemas[i][1] == 'Vrijdag' or schemas[i][1] == 'Zaterdag'):
+                if not ("V16" in schemas[i + 1] or "SNIPPERDAG" in schemas[i + 1] or "Onverwachte Snipperdag" in schemas[i + 1]):
+                    result.append(f'Controleer positie na V3 van {schemas[i][0]} op {schemas[i][2]}')
+    if len(result) == 0:
+        result.append('Posities na V3 in orde.')
+    return result
 
 
 
