@@ -20,19 +20,20 @@ def staf_view(request):
 
         if form.is_valid():
             excel_file = request.FILES["excel_file"]
+            file_name = str(excel_file).split(".")[0]
             wb = openpyxl.load_workbook(excel_file, data_only=True)
             weekkeuze = form.cleaned_data['weken']
 
             control_data = controlestaf.main(wb, weekkeuze)
 
-            context = {'control_data': control_data, 'weekkeuze': weekkeuze}
+            context = {'control_data': control_data, 'weekkeuze': weekkeuze, 'file_name': file_name}
 
             return render(request, 'core/resultpage.html', context)
 
     else:
 
         form = forms.UserForm()
-        return render(request, 'core/form_staf.html', {"form": form})
+    return render(request, 'core/form_staf.html', {"form": form})
 
 
 def assistenten_view(request):
@@ -43,16 +44,17 @@ def assistenten_view(request):
 
         if form.is_valid():
             excel_file = request.FILES["excel_file"]
+            file_name = str(excel_file).split(".")[0]
             wb = openpyxl.load_workbook(excel_file, data_only=True)
             weekkeuze = form.cleaned_data['weken']
 
             control_data = controleassist.main(wb, weekkeuze)
 
-            context = {'control_data': control_data, 'weekkeuze': weekkeuze}
+            context = {'control_data': control_data, 'weekkeuze': weekkeuze, 'file_name': file_name}
 
             return render(request, 'core/resultpage.html', context)
 
     else:
 
         form = forms.UserForm()
-        return render(request, 'core/form_assist.html', {"form": form})
+    return render(request, 'core/form_assist.html', {"form": form})

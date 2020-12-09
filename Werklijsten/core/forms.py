@@ -1,17 +1,19 @@
 from django import forms
 from django.core import validators
+from core.validators import validate_is_xlsx
+
 
 WEEK_KEUZE = [
     ('WEEK1', 'Week 1'),
     ('WEEK2', 'Week 2'),
     ('WEEK3', 'Week 3'),
     ('WEEK4', 'Week 4'),
-    ('all', 'Alle Weken'),
+    ('all', 'Alle Weken')
 ]
 
 
 class UserForm(forms.Form):
-    excel_file = forms.FileField()
+    excel_file = forms.FileField(validators=[validate_is_xlsx])
     weken = forms.CharField(label='Welke week wil je analyseren?', widget=forms.Select(choices=WEEK_KEUZE))
     botcatcher = forms.CharField(required=False,
                                  widget=forms.HiddenInput,
