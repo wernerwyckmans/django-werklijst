@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Controle Lijsten</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <style>
         .inhoud {
@@ -18,6 +18,13 @@
                 <li><a href="{% url 'core:stafform' %}" class="navbar-link">Staf</a></li>
                 <li><a href="{% url 'admin:index' %}" class="navbar-link">Admin</a></li>
                 <li><a href="{% url 'core:assistentenform' %}" class="navbar-link">Assistenten</a></li>
+
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}" class="navbar-link">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'core:user_login' %}" class="navbar-link">Login</a></li>
+                {% endif %}
+
             </ul>
         </div>
     </nav>

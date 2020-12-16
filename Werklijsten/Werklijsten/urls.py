@@ -20,6 +20,8 @@ from core import views
 
 urlpatterns = [
     url('admin/', admin.site.urls),
-    url(r'^$', views.index, name='index'),
+    url(r'^index/$', views.index, name='index'),
+    url(r'^$', views.user_login, name='user_login'),
     url(r'^core/', include('core.urls')),
+    url(r'^logout/$', views.user_logout, name='logout'),
 ]

@@ -207,24 +207,28 @@ def controleerchefok(schemas):
     result = list()
 
     for schema in schemas:
-        if "Corona-Coördinator OK VJ" in schema:
+
+        # controleer positie chef OK virga jesse
+        if "Chef OK VIRGA" in schema:
             notcompatible = ["ZAAL 11", "ZAAL 12", "ITE 1", "ITE 2", "ITE 3", "ZAAL 7 CARDIO", "HYBRIDE", "EFO 2",
                              "Radiologie 1"]
-            match = lookformatches(schema, 0, notcompatible, "Corona-Coördinator OK VJ")
+            match = lookformatches(schema, 0, notcompatible, "Chef OK Virga")
             if match != "":
                 result.append(match)
 
-        if "CHEF OK" in schema:
+        # controleer positie chef OK Salvator
+        if "Chef OK Salvator" in schema:
             notcompatible = ["OFTALMO ZAAL 11", "OFTALMO ZAAL 12", "S-ZAAL 7", "S-ZAAL 8", "S-ZAAL 9"]
-            match = lookformatches(schema, 0, notcompatible, "CHEF OK")
+            match = lookformatches(schema, 0, notcompatible, "Chef OK Salvator")
             if match != "":
                 result.append(match)
         if len(result) == 0:
-            result.append("Corona-Coördinator OK VJ en Chef OK Salvator in correcte zalen")
+            result.append("Chef OK VJ en Chef OK Salvator in correcte zalen")
     return result
 
 
 def checkwachten(weken, lijsten):
+    # controleer of in de wachten minstens één intensivist aanwezig is
     result = list()
     intensieve = lijsten[1]
     for sheet in weken:
@@ -241,7 +245,7 @@ def checkwachten(weken, lijsten):
                 # maak dict wachten met key(functie) uit col 2 en value (staflid) uit col en row
                 wachten[sheet.cell(row, 2).value] = sheet.cell(row, col).value
 
-            if not (wachten['V1 (Coronapermanentie)'] in intensieve or wachten['V2 (INSLAPEND)'] in intensieve or wachten['S1 (Coronapermanentie)'] in intensieve):
+            if not (wachten['V1 (Coronapermanentie)'] in intensieve or wachten['V2 (INSLAPEND)'] in intensieve or wachten['S1'] in intensieve):
 
                 result.append(f'Check Wachten op {date}')
     if len(result) == 0:
@@ -252,7 +256,7 @@ def checkwachten(weken, lijsten):
 def checkrecup(schemas):
     result = list()
     for schema in schemas:
-        if ("recup" in schema or "RECUP" in schema) and not checkweekend(schema[1]):
+        if ("R1" in schema or "RECUP" in schema) and not checkweekend(schema[1]):
             if len(schema) > 4:
                 result.append(f'Controleer recuperatie voor: {schema[0]} op {schema[2]}')
     if len(result) == 0:
