@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="71d8da1a-e24a-4f11-9a6a-b3d87682722c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Werklijsten/core/controlestaf.py" beforeDir="false" afterPath="$PROJECT_DIR$/Werklijsten/core/controlestaf.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Werklijsten/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/Werklijsten/db.sqlite3" afterDir="false" />
-    </list>
+    <list default="true" id="71d8da1a-e24a-4f11-9a6a-b3d87682722c" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,7 +127,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1519" height="977" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.11268556" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
