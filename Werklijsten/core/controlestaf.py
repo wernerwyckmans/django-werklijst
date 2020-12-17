@@ -237,16 +237,17 @@ def checkwachten(weken, lijsten):
             wachten = {}
             for row in range(40, 50):  # Virga Jesse
 
-                # maak dict wachten met key(S1) uit col 2 en value (staflid) uit col en row
-                # wachten[sheet.cell(row, 2).value] = sheet.cell(row, col).value
-                for row in range(100, 150):
-                    if sheet.cell(row, 2).value == 'S1':
-                        wachten['S1'] = sheet.cell(row, col).value
-
-            for row in range(120, 130):  # Salvator
-
                 # maak dict wachten met key(functie) uit col 2 en value (staflid) uit col en row
                 wachten[sheet.cell(row, 2).value] = sheet.cell(row, col).value
+
+            # for row in range(120, 130):  # Salvator
+            #
+            #     # maak dict wachten met key(functie) uit col 2 en value (staflid) uit col en row
+            #     wachten[sheet.cell(row, 2).value] = sheet.cell(row, col).value
+            # maak dictionary voor S1 Salvator
+            for row in range(100, 150):
+                if sheet.cell(row, 2).value == 'S1':
+                    wachten['S1'] = sheet.cell(row, col).value
 
             if not (wachten['V1 (Coronapermanentie)'] in intensieve or wachten['V2 (INSLAPEND)'] in intensieve or wachten['S1'] in intensieve):
 
