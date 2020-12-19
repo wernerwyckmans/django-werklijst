@@ -4,6 +4,9 @@ import itertools
 MAX_LIST = 0
 MIN_STAFF = 0
 MAX_STAFF = 0
+MAX_VIRGA = 0
+MIN_SAL = 0
+MAX_SAL = 0
 
 
 def main(wb, weekkeuze):
@@ -21,53 +24,78 @@ def main(wb, weekkeuze):
 
 
 def setdimensions(sheet):
+    """Bepaal de dimensies van het werkblad met de cruciale posities"""
     # controleer sheet, zoek tot waar werklijst loopt en van waar tot waar de stafleden staan(BRN-WKW)
     # MAX_LIST, MIN_STAFF en MAX_STAFF worden hier bepaald
+    # zoek wat de min en max rijnummers voor posities in virga en salvator zijn
     global MAX_LIST
     global MIN_STAFF
     global MAX_STAFF
+    global MAX_VIRGA
+    global MIN_SAL
+    global MAX_SAL
     for row in range(1, sheet.max_row):
         if sheet.cell(row, 2).value == "RECUP":
-            MAX_LIST = row + 1
+            MAX_LIST = row
+        if sheet.cell(row, 2).value == "Radiologie 2":
+            MAX_VIRGA = row
+        if sheet.cell(row, 2).value == "S-ITE 1 Corona-Coordinator Sal":
+            MIN_SAL = row
+        if sheet.cell(row, 2).value == "RAADPLEGING Salvator":
+            MAX_SAL = row
         if sheet.cell(row, 3).value == "BRN" and row > MAX_LIST + 1:
             MIN_STAFF = row
         if sheet.cell(row, 3).value == "WKW" and row > MAX_LIST:
             MAX_STAFF = row
-    print(MAX_LIST, MIN_STAFF, MAX_STAFF)
 
 
 def maaklijsten(workbook):
-    # maakt de lijsten aan om in andere functies te gebruiken, output is een lijst van lijsten
-    # TODO: functie herschrijven, alle lijsten zullen beschikbaar zijn op afzonderlijk tabblad
-    # Ook hier te herwerken naar dictionary!
-    # lijsten[0] = staf, lijsten[1] = Intensieve, lijsten[2] = posities virga
-    lijsten = []
-    assist = []
-    sheet = workbook['WEEK4']
-    posities_virga = []
-    posities_salvator = []
-    setdimensions(sheet)
+    # bijkomende functie maken !
+    # maakt de lijsten aan om in andere functies te gebruiken, output is een lijst dictionaries
+    # lijsten[0] = staff, lijsten[1]= intensieve, lijsten[2]= posities virga, lijsten[3] = posities salvator
+    lijst = {"staff": [], "intensievist": [], "posities_virga": [], "posities_salvator": [], "cardio_anesthesist": [],
+             "assistent_anesthesie": [], "assistent_ite": []}
 
-    # Maak lijst assistenten
-    for i in range(MAX_STAFF + 2, MAX_STAFF + 28):  # 131-157, dit mogen geen literals zijn !
+    # Maak lijst Intensivisten
+    sheet = workbook['ARTSEN']
+    for i in range(2, len(sheet['B']) + 1):
+        if sheet.cell(i, 2).value is not None:
+            lijst["intensievist"].append(sheet.cell(i, 2).value)
+
+    # Maak lijst stafleden
+    for i in range(2, len(sheet['A']) + 1):
+        if sheet.cell(i, 1).value is not None:
+            lijst["staff"].append(sheet.cell(i, 1).value)
+
+    # Maak lijst cardio_anesthesist
+    for i in range(2, len(sheet['C']) + 1):
         if sheet.cell(i, 3).value is not None:
-            assist.append(sheet.cell(i, 3).value)
-    lijsten.append(assist)
+            lijst["cardio_anesthesist"].append(sheet.cell(i, 3).value)
+
+    # Maak lijst assistenten_anesthesie
+    for i in range(2, len(sheet['G']) + 1):
+        if sheet.cell(i, 7).value is not None:
+            lijst["assistent_anesthesie"].append(sheet.cell(i, 7).value)
+
+    # Maak lijst assistent_ite
+    for i in range(2, len(sheet['H']) + 1):
+        if sheet.cell(i, 8).value is not None:
+            lijst["assistent_ite"].append(sheet.cell(i, 8).value)
 
     # Maak een lijst van Virga Jesse posities
     sheet = workbook['WEEK4']
-    for i in range(5, 35):  # TODO Nog aanpassen via setdimensions
+    setdimensions(sheet)
+    for i in range(5, MAX_VIRGA + 1):
         if sheet.cell(i, 2).value is not None:
-            posities_virga.append(sheet.cell(i, 2).value)
-    lijsten.append(posities_virga)
+            lijst["posities_virga"].append(sheet.cell(i, 2).value)
 
     # Maak lijst van Salvator posities
-    for i in range(101, 122):  # TODO: Nog aanpassen via setdimensions
+    for i in range(MIN_SAL, MAX_SAL + 1):
         if sheet.cell(i, 2).value is not None:
-            posities_salvator.append(sheet.cell(i, 2).value)
-    lijsten.append(posities_salvator)
+            lijst["posities_salvator"].append(sheet.cell(i, 2).value)
+    # print(lijst["posities_virga"])
 
-    return lijsten
+    return lijst
 
 
 def kiesweken(workbook, weekkeuze):
@@ -113,7 +141,7 @@ def maakindividueledagschemas(assist, sheet):
 def maakalledagschemas(sheets_to_use, lijsten):
     # assist is eerste lijst van lijsten, later kunnen andere lijsten toegevoegd worden
     # return is een lijst van alle dagschema's van alle assistenten over gekozen periode
-    assistenten = lijsten[0]
+    assistenten = lijsten["assistent_anesthesie"] + lijsten["assistent_ite"]
     cumulschemas = []
 
     for sheet in sheets_to_use:
