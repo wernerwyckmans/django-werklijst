@@ -21,6 +21,7 @@ def main(wb, weekkeuze):
     li = maaklijsten(wb)
     dagschemas = maakalledagschemas(weken, li)
     aanwezigen_salvator = check_aanwezigen_sal_opdatum(weken)
+    aanwezigen_cardio_virga = check_aanwezigen_virga_var_opdatum(weken, 7)
 
     # voer de verschillende controles uit
     control_data += controleeraflossing(dagschemas, li)
@@ -30,6 +31,7 @@ def main(wb, weekkeuze):
     control_data += checkrecup(dagschemas)
     control_data += check_v3(dagschemas)
     control_data += check_locoreg_anesthesist_sal(aanwezigen_salvator, li)
+    control_data += check_cardioanesthesist_vj(aanwezigen_cardio_virga, li)
 
     return control_data
 
@@ -164,7 +166,7 @@ def setdimensions(sheet):
             MIN_STAFF = row
         if sheet.cell(row, 3).value == "WKW" and row > MAX_LIST:
             MAX_STAFF = row
-    print(MAX_LIST, MIN_STAFF, MAX_STAFF)
+
 
 
 def checkweekend(day):
@@ -312,10 +314,6 @@ def check_v3(schemas):
     return result
 
 
-def check_cardioanesthesist_vj():
-    pass
-
-
 def check_aanwezigen_sal_opdatum(weken):
     aanwezigen = {}
     for sheet in weken:
@@ -343,6 +341,40 @@ def check_locoreg_anesthesist_sal(aanwezigen, lijst):
             result.append(f'Geen locoregionale anesthesist in Salvator op {i}')
     return result
 
+
+def check_aanwezigen_virga_var_opdatum(weken, aantal):
+    """Maak dict met key = datum en eerste aantal anesthesisten in Virga"""
+    aanwezigen = {}
+    for sheet in weken:
+
+        # Bepaal het startpunt in de kolom met posities, V2 is stabielste parameter
+        for row in range(1, sheet.max_row):
+            if sheet.cell(row, 2).value == "V2 (INSLAPEND)":
+                startpunt = row - 1
+
+        # maak key aan en initieer value list
+        for col in range(3, 8):
+            temp_date = sheet.cell(4, col).value.date()
+            date = temp_date.strftime("%d/%m/%Y")
+            aanwezigen[date] = []
+
+            # vul de value list
+            for row in range(startpunt, startpunt + aantal):
+                aanwezigen[date].append(sheet.cell(row, col).value)
+
+    return aanwezigen
+
+
+def check_cardioanesthesist_vj(aanwezigen, lijst):
+    result = list()
+    for i in aanwezigen:
+        counter = 0
+        for el in aanwezigen[i]:
+            if el in lijst["cardio_anesthesist"]:
+                counter += 1
+        if not counter >= 2:
+            result.append(f'Te weinig cardio anesthesisten in positie V1 tot V7 op {i}')
+    return result
 
 
 
