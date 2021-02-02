@@ -13,7 +13,7 @@ WEEK_KEUZE = [
 
 
 class UserForm(forms.Form):
-    excel_file = forms.FileField(validators=[validate_is_xlsx])
+    excel_file = forms.FileField()
     weken = forms.CharField(label='Welke week wil je analyseren?', widget=forms.Select(choices=WEEK_KEUZE))
     botcatcher = forms.CharField(required=False,
                                  widget=forms.HiddenInput,
