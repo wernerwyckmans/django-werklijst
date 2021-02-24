@@ -306,8 +306,8 @@ def check_v3(schemas):
     for i in range(0, len(schemas)):
         if "V3 (THUISWACHT)" in schemas[i]:
             if not (schemas[i][1] == 'Vrijdag' or schemas[i][1] == 'Zaterdag'):
-                if not ("V16" in schemas[i + 1] or "SNIPPERDAG" in schemas[i + 1] or "Onverwachte Snipperdag" in
-                        schemas[i + 1]):
+                if not ("V16" in schemas[i + 1] or "SNIPPERDAG" in schemas[i + 1]
+                        or "Onverwachte Snipperdag" in schemas[i + 1] or "Eerst Vertrekkende" in schemas[i + 1]):
                     result.append(f'Controleer positie na V3 van {schemas[i][0]} op {schemas[i][2]}')
     if len(result) == 0:
         result.append('Posities na V3 in orde.')
