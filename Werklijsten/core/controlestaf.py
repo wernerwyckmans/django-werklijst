@@ -1,9 +1,9 @@
+
 import openpyxl as xl
 from openpyxl import Workbook
 import re
 import itertools
 import datetime
-
 # TODO: alles omwerken naar dictionary !
 # TODO: Leesbaarheid moet beter
 
@@ -16,6 +16,7 @@ MAX_SAL = 0
 
 
 def main(wb, weekkeuze):
+
     control_data = list()
     weken = kiesweken(wb, weekkeuze)
     li = maaklijsten(wb)
@@ -168,7 +169,6 @@ def setdimensions(sheet):
             MAX_STAFF = row
 
 
-
 def checkweekend(day):
     weekend = False
     if day == "Zaterdag" or day == "Zondag":
@@ -208,15 +208,14 @@ def controleeraflossing(schemas, lijsten):
             # regex: start met V of S gevolgd door één of meer getallen of een woord (bv V1 inslapend)
             # meerdere keren op afloslijst
             pattern = re.compile(r'^[VS]\d+\w*')
-            matches = [x for x in schema[3:] if pattern.match(str(x)) or x == 'Eerst Vertrekkende']
+            matches = [x for x in schema[3:] if pattern.match(str(x))or x == 'Eerst Vertrekkende']
             if len(matches) > 1:
                 posities = " ,".join(matches)
                 result.append(f'Meer dan één keer op afloslijsten: {schema[0]} op {schema[2]}: ' + posities)
 
             # staflid op afloslijst Salvator maar ingepland Virga Jesse of alleen op afloslijst Salvator
             pattern = re.compile(r'^[S]\d\w*')
-            matches = [x for x in schema[3:] if
-                       pattern.match(str(x)) and (schema[3] in lijsten["posities_virga"] or len(schema) == 4)]
+            matches = [x for x in schema[3:] if pattern.match(str(x)) and (schema[3] in lijsten["posities_virga"] or len(schema) == 4)]
             if len(matches) >= 1:
                 posities = " ,".join(matches)
                 result.append(f'Controleer aflossing/zaaltoewijzing voor: {schema[0]} op {schema[2]}: ' + posities)
@@ -243,7 +242,7 @@ def controleerchefok(schemas):
         # controleer positie chef OK virga jesse
         if "Chef OK VIRGA" in schema:
             notcompatible = ["ZAAL 11", "ZAAL 12", "ITE 1", "ITE 2", "ITE 3", "ZAAL 7 CARDIO", "HYBRIDE", "EFO 2",
-                             "Radiologie 1"]
+                             "Radiologie 1", "EFO 1", "EFO 3", "EFO4", "Radiologie 2"]
             match = lookformatches(schema, 0, notcompatible, "Chef OK VIRGA")
             if match != "":
                 result.append(match)
@@ -255,7 +254,7 @@ def controleerchefok(schemas):
             if match != "":
                 result.append(match)
         if len(result) == 0:
-            result.append("Corona-Coördinator OK VJ en Chef OK Salvator in correcte zalen")
+            result.append("Chef OK VJ en Chef OK Salvator in correcte zalen")
     return result
 
 
@@ -267,11 +266,11 @@ def checkwachten(weken, lijsten):
         for col in range(3, 10):
             date = sheet.cell(4, col).value.date()
             wachten = {}
-            for row in range(40, 50):  # Virga Jesse ---> geen litterals!
+            for row in range(47, 60):  # Virga Jesse ---> geen litterals!
 
                 # maak dict wachten met key(functie) uit col 2 en value (staflid) uit col en row
                 wachten[sheet.cell(row, 2).value] = sheet.cell(row, col).value
-
+            print(wachten.keys())
             # for row in range(120, 130):  # Salvator
             #
             #     # maak dict wachten met key(functie) uit col 2 en value (staflid) uit col en row
@@ -281,8 +280,8 @@ def checkwachten(weken, lijsten):
                 if sheet.cell(row, 2).value == 'S1':
                     wachten['S1'] = sheet.cell(row, col).value
 
-            if not (wachten['V1 (Coronapermanentie)'] in intensieve or wachten['V2 (INSLAPEND)'] in intensieve or
-                    wachten['S1'] in intensieve):
+            if not (wachten['V1'] in intensieve or wachten['V2'] in intensieve):
+
                 result.append(f'Check Wachten op {date}')
     if len(result) == 0:
         result.append('Geen problemen gevonden in de wachtsamenstelling')
@@ -343,13 +342,13 @@ def check_locoreg_anesthesist_sal(aanwezigen, lijst):
 
 
 def check_aanwezigen_virga_var_opdatum(weken, aantal):
-    """Maak dict met key = datum en eerste aantal anesthesisten in Virga"""
+    """Maak dict met key = datum en list eerste aantal anesthesisten in Virga"""
     aanwezigen = {}
     for sheet in weken:
 
         # Bepaal het startpunt in de kolom met posities, V2 is stabielste parameter
         for row in range(1, sheet.max_row):
-            if sheet.cell(row, 2).value == "V2 (INSLAPEND)":
+            if sheet.cell(row, 2).value == "V2":
                 startpunt = row - 1
 
         # maak key aan en initieer value list
@@ -375,7 +374,6 @@ def check_cardioanesthesist_vj(aanwezigen, lijst):
         if not counter >= 2:
             result.append(f'Te weinig cardio anesthesisten in positie V1 tot V7 op {i}')
     return result
-
 
 
 
